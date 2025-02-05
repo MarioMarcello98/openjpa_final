@@ -26,7 +26,6 @@ import org.apache.openjpa.persistence.FetchPlan;
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.apache.openjpa.persistence.OpenJPAQuery;
-import org.apache.openjpa.persistence.test.SQLListenerTestCase;
 
 /**
  * Tests whether the lock mode on named query emits a FOR UPDATE clause in target SQL

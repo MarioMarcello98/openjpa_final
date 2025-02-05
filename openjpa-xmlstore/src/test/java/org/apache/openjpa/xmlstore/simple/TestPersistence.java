@@ -28,7 +28,6 @@ import jakarta.persistence.EntityTransaction;
 
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
-import org.apache.openjpa.persistence.test.AbstractPersistenceTestCase;
 
 /**
  * Simple XMLStore test case to get an EntityManager and perform some basic operations.

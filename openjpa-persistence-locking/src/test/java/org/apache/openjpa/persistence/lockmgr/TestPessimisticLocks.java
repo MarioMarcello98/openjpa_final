@@ -42,7 +42,6 @@ import org.apache.openjpa.jdbc.sql.InformixDictionary;
 import org.apache.openjpa.lib.log.Log;
 import org.apache.openjpa.persistence.LockTimeoutException;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
-import org.apache.openjpa.persistence.test.SQLListenerTestCase;
 import org.apache.openjpa.util.OpenJPAException;
 
 import junit.framework.AssertionFailedError;

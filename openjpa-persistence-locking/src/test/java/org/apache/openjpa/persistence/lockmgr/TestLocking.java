@@ -27,7 +27,6 @@ import jakarta.persistence.LockModeType;
 import jakarta.persistence.PessimisticLockScope;
 
 import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
-import org.apache.openjpa.persistence.test.SQLListenerTestCase;
 
 public class TestLocking extends SQLListenerTestCase {
     String _phone = "5075555555";

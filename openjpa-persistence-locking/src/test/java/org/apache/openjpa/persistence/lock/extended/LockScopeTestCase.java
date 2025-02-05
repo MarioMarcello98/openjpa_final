@@ -35,7 +35,6 @@ import org.apache.openjpa.jdbc.conf.JDBCConfigurationImpl;
 import org.apache.openjpa.lib.log.Log;
 import org.apache.openjpa.persistence.MixedLockLevelsHelper;
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
-import org.apache.openjpa.persistence.test.SQLListenerTestCase;
 
 /**
  * Base class for locking extended scope tests.

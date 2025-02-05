@@ -25,7 +25,6 @@ import jakarta.persistence.EntityManager;
 
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.jdbc.JDBCFetchPlan;
-import org.apache.openjpa.persistence.test.AllowFailure;
 
 /**
  * Test hints using EntityManager interface.
@@ -65,8 +64,6 @@ public class TestEmLockTimeout extends SequencedActionsTest {
      * Test setting lock.timeout at the createEntityManagerFactory,
      * with multiple equivalent entries.
      */
-    @AllowFailure(message="OPENJPA-??? - Provider.createEntityManagerFactory" +
-        " does not suppport multiple equivalent properties.")
     public void testSetLockTimeoutsAtProviderCreateEmf() {
         setUp(LockEmployee.class
             , "openjpa.LockManager", "mixed"

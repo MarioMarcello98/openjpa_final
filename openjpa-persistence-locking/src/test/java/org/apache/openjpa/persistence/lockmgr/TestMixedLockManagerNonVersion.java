@@ -25,7 +25,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 
 import org.apache.openjpa.lib.log.Log;
-import org.apache.openjpa.persistence.test.SQLListenerTestCase;
 
 /**
  * Test find, lock and refresh em methods against non-versioned entity.

@@ -28,8 +28,6 @@ import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.apache.openjpa.persistence.OpenJPAQuery;
 import org.apache.openjpa.persistence.TransactionRequiredException;
-import org.apache.openjpa.persistence.test.AllowFailure;
-import org.apache.openjpa.persistence.test.SQLListenerTestCase;
 
 /**
  * Tests the lock mode on named query emits a FOR UPDATE clause in target SQL
@@ -67,7 +65,6 @@ public class TestNamedQueryLockMode extends SQLListenerTestCase {
         em.getTransaction().rollback();
     }
 
-    @AllowFailure
     public void testNamedQueryWithLockModeMustExecuteInTransaction() {
         EntityManager em = emf.createEntityManager();
         // execute without a transaction
@@ -115,7 +112,6 @@ public class TestNamedQueryLockMode extends SQLListenerTestCase {
         em.getTransaction().commit();
     }
 
-    @AllowFailure
     public void testForUpdateClauseAbsentInQueryWithExplictNoLock() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
