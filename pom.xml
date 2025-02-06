@@ -202,7 +202,6 @@
         <module>openjpa-features</module>
         <module>openjpa-junit5</module>
         <module>tests</module>
-        <module>tests</module>
     </modules>
 
     <profiles>
