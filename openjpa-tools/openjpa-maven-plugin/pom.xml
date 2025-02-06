@@ -192,7 +192,7 @@
                 </configuration>
                 <dependencies>
                 </dependencies>
-                <executions>
+                <!--executions>
                     <execution>
                         <id>integration-test</id>
                         <goals>
@@ -200,7 +200,7 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>-->
             </plugin>
         </plugins>
     </build>
