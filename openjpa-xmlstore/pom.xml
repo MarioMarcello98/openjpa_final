@@ -95,7 +95,7 @@
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                 </configuration>
-                <executions>
+                <!--executions>
                     <execution>
                         <id>enhancer</id>
                         <phase>process-test-classes</phase>
@@ -103,7 +103,7 @@
                             <goal>test-enhance</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions-->
                 <dependencies>
                     <!-- use o-p-j instead of openjpa to avoid cyclical dependency in maven graph -->
                     <dependency>
