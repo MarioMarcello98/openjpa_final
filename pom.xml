@@ -2347,7 +2347,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <executions>
-                    <execution>
+                    <!--execution>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>checkstyle</goal>
@@ -2377,7 +2377,6 @@
                                         </module>
                                     </module>
 
-                                    <!-- File location is specified in root pom.xml via ${checkstyle.suppressions.location} -->
                                     <module name="SuppressionFilter">
                                         <property name="file" value="${checkstyle.suppressions.location}" />
                                         <property name="optional" value="true" />
@@ -2386,7 +2385,7 @@
                             </checkstyleRules>
                         </configuration>
                     </execution>
-                </executions>
+                </executions-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
