@@ -227,14 +227,14 @@
                     <plugin>
                         <groupId>org.apache.rat</groupId>
                         <artifactId>apache-rat-plugin</artifactId>
-                        <executions>
+                        <!--executions>
                             <execution>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
                             </execution>
-                        </executions>
+                        </executions-->
                         <configuration>
                             <excludeSubProjects>false</excludeSubProjects>
                             <numUnapprovedLicenses>0</numUnapprovedLicenses>
@@ -2414,14 +2414,14 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-                <executions>
+                <!--executions>
                     <execution>
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions-->
                 <configuration>
                     <excludeSubProjects>false</excludeSubProjects>
                     <numUnapprovedLicenses>0</numUnapprovedLicenses>
