@@ -2346,8 +2346,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <executions>
-                    <!--execution>
+                <!--executions>
+                    <execution>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>checkstyle</goal>
