@@ -1,9 +1,6 @@
 package org.apache.openjpa.util;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -58,7 +55,7 @@ public class CacheMapPuttingTest {
      * Object value: null, valid_obj, invalid_obj<br>
      */
     @Parameterized.Parameters
-    public static Collection<PutInputTuple> getReadInputTuples() {
+    public static Collection<PutInputTuple> getPutInputTuples() {
         List<PutInputTuple> putInputTupleList = new ArrayList<>();
         putInputTupleList.add(new PutInputTuple(STATE_OF_KEY.NULL, false, STATE_OF_VALUE.VALID));              //[1]
         putInputTupleList.add(new PutInputTuple(STATE_OF_KEY.NULL, false, STATE_OF_VALUE.NULL));               //[2]
@@ -96,13 +93,13 @@ public class CacheMapPuttingTest {
             this.isKeyPinned = isKeyPinned;
             this.stateOfValue = stateOfValue;
         }
-        private STATE_OF_KEY stateOfKey() {
+        public STATE_OF_KEY stateOfKey() {
             return stateOfKey;
         }
         public boolean isKeyPinned() {
             return isKeyPinned;
         }
-        private STATE_OF_VALUE stateOfValue() {
+        public STATE_OF_VALUE stateOfValue() {
             return stateOfValue;
         }
     }
@@ -144,8 +141,8 @@ public class CacheMapPuttingTest {
         }
     }
 
-    @Test
-    public void put() {
+    @Test//@Ignore
+    public void puttingTest() {
         Object retVal = this.cacheMap.put(this.key, this.value);
         if(this.stateOfKey == STATE_OF_KEY.NOT_EXISTENT){
             verify(this.cacheMap).entryAdded(this.key, this.value);
