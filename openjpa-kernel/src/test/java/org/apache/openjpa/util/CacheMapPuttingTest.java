@@ -1,5 +1,6 @@
 package org.apache.openjpa.util;
 
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,119 +15,91 @@ import static org.mockito.Mockito.*;
 
 @RunWith(Parameterized.class)
 public class CacheMapPuttingTest {
-
-    private CacheMap cacheMap;
     private Object key;
-    private Object value;
-    private final STATE_OF_KEY stateOfKey;
-    private final STATE_OF_VALUE stateOfValue;
-    private final boolean isKeyPinned;
-    private final Object existingValue = new Object();
+    private String keyType;
+    private boolean existingKey;
+    private CacheMap cacheMap;
+    private Object output;
+    private Integer dummyValue = 5;
+    private boolean inSoftMap;
+    private int softMapSize = 512;
 
-    private enum STATE_OF_KEY { NULL, EXISTENT, NOT_EXISTENT, INVALID }
-    private enum STATE_OF_VALUE { NULL, VALID, INVALID }
+    private static final String NULL = "null";
+    private static final String VALID = "valid";
+    private static final String INVALID = "invalid";
 
-    @Parameterized.Parameters(name = "{index}: key={0}, pinned={1}, value={2}")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {STATE_OF_KEY.NULL, false, STATE_OF_VALUE.VALID},
-                {STATE_OF_KEY.NULL, false, STATE_OF_VALUE.NULL},
-                {STATE_OF_KEY.NULL, false, STATE_OF_VALUE.INVALID},
-                {STATE_OF_KEY.EXISTENT, false, STATE_OF_VALUE.VALID},
-                {STATE_OF_KEY.EXISTENT, false, STATE_OF_VALUE.NULL},
-                {STATE_OF_KEY.EXISTENT, false, STATE_OF_VALUE.INVALID},
-                {STATE_OF_KEY.NOT_EXISTENT, false, STATE_OF_VALUE.VALID},
-                {STATE_OF_KEY.NOT_EXISTENT, false, STATE_OF_VALUE.NULL},
-                {STATE_OF_KEY.NOT_EXISTENT, false, STATE_OF_VALUE.INVALID},
-                {STATE_OF_KEY.INVALID, false, STATE_OF_VALUE.VALID},
-                {STATE_OF_KEY.INVALID, false, STATE_OF_VALUE.NULL},
-                {STATE_OF_KEY.INVALID, false, STATE_OF_VALUE.INVALID},
-                {STATE_OF_KEY.EXISTENT, true, STATE_OF_VALUE.VALID},
-                {STATE_OF_KEY.EXISTENT, true, STATE_OF_VALUE.NULL},
-                {STATE_OF_KEY.EXISTENT, true, STATE_OF_VALUE.INVALID},
-                {STATE_OF_KEY.NOT_EXISTENT, true, STATE_OF_VALUE.VALID},
-                {STATE_OF_KEY.NOT_EXISTENT, true, STATE_OF_VALUE.NULL},
-                {STATE_OF_KEY.NOT_EXISTENT, true, STATE_OF_VALUE.INVALID}
-        });
+    public CacheMapPuttingTest(String keyType, boolean existingKey, boolean inSoftMap, Object output) {
+        this.keyType = keyType;
+        this.existingKey = existingKey;
+        this.output = output;
+        this.inSoftMap = inSoftMap;
     }
 
-    public CacheMapPuttingTest(STATE_OF_KEY stateOfKey, boolean isKeyPinned, STATE_OF_VALUE stateOfValue) {
-        this.stateOfKey = stateOfKey;
-        this.isKeyPinned = isKeyPinned;
-        this.stateOfValue = stateOfValue;
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {NULL, false, false, null},
+                {NULL, true, false, 5},
+                {VALID, true, false, 5},
+                {VALID, false, false, null},
+                {INVALID, true, false, null},
+                {INVALID, false, false, null},
+                // Test cases added after JaCoCo results
+                {NULL, false, true, 5},
+                {VALID, true, true, 5},
+                {VALID, false, true, 5},
+                {INVALID, true, true, null},
+                {INVALID, false, true, null}
+        });
     }
 
     @Before
     public void setUp() {
-        this.cacheMap = spy(new CacheMap());
+        cacheMap = spy(new CacheMap());
 
-        switch (stateOfKey) {
-            case NULL:
-                this.key = null;
-                break;
-            case INVALID:
-                this.key = new MyInvalidObject();
-                break;
-            case EXISTENT:
-                this.key = new Object();
-                this.cacheMap.put(this.key, this.existingValue);
-                if (this.isKeyPinned) {
-                    this.cacheMap.pin(this.key);
-                }
-                break;
-            case NOT_EXISTENT:
-                this.key = new Object();
-                if (this.isKeyPinned) {
-                    this.cacheMap.pin(this.key);
-                }
-                break;
-        }
+        setParam(keyType);
 
-        switch (stateOfValue) {
-            case NULL:
-                this.value = null;
-                break;
-            case INVALID:
-                this.value = new MyInvalidObject();
-                break;
-            case VALID:
-                this.value = new Object();
-                break;
+        if (existingKey)
+            cacheMap.put(key, dummyValue);
+
+        if (inSoftMap) {
+            cacheMap.setSoftReferenceSize(softMapSize);
+            cacheMap.put(cacheMap.softMap, key, dummyValue);
         }
     }
 
     @Test
-    public void testPut() {
-        Object retVal = this.cacheMap.put(this.key, this.value);
+    public void test() {
+        Object res = cacheMap.get(key);
 
-
-        if (this.stateOfKey == STATE_OF_KEY.NOT_EXISTENT) {
-            verify(this.cacheMap).entryAdded(this.key, this.value);
-        }
-
-        else if (this.stateOfKey == STATE_OF_KEY.EXISTENT) {
-            verify(this.cacheMap).entryRemoved(this.key, this.existingValue, false);
-            verify(this.cacheMap).entryAdded(this.key, this.value);
-        }
-
-
-        int expectedLockCalls = (this.stateOfKey == STATE_OF_KEY.EXISTENT) ? 2 : 1;
-        if (this.isKeyPinned) expectedLockCalls++;
-
-        verify(this.cacheMap, times(expectedLockCalls)).writeLock();
-        verify(this.cacheMap, times(expectedLockCalls)).writeUnlock();
-
-
-        Assert.assertEquals(this.value, this.cacheMap.get(this.key));
-        if (this.stateOfKey == STATE_OF_KEY.EXISTENT) {
-            Assert.assertEquals(this.existingValue, retVal);
+        if (output != null && keyType.equals(VALID) || keyType.equals(NULL)) {
+            Assert.assertEquals(output, res);
         } else {
-            Assert.assertNull(retVal);
+            Assert.assertNull(res);
+        }
+
+        /* Some mutations killed */
+        if (existingKey && inSoftMap && !keyType.equals(INVALID)) {
+            verify(cacheMap, times(2)).put(key, dummyValue);
         }
     }
 
     @After
     public void tearDown() {
-        this.cacheMap.clear();
+        cacheMap.clear();
+    }
+
+    private void setParam(String param) {
+        switch (param) {
+            case NULL:
+                key = null;
+                break;
+            case VALID:
+                key = new Object();
+                break;
+            case INVALID:
+                key = new MyInvalidObject();
+                break;
+        }
     }
 }
