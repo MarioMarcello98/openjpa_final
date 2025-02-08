@@ -1,8 +1,6 @@
 package org.apache.openjpa.util;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -57,7 +55,7 @@ public class CacheMapPuttingTest {
      * Object value: null, valid_obj, invalid_obj<br>
      */
     @Parameterized.Parameters
-    public static Collection<PutInputTuple> getReadInputTuples() {
+    public static Collection<PutInputTuple> getPutInputTuples() {
         List<PutInputTuple> putInputTupleList = new ArrayList<>();
         putInputTupleList.add(new PutInputTuple(STATE_OF_KEY.NULL, false, STATE_OF_VALUE.VALID));              //[1]
         putInputTupleList.add(new PutInputTuple(STATE_OF_KEY.NULL, false, STATE_OF_VALUE.NULL));               //[2]
@@ -143,8 +141,8 @@ public class CacheMapPuttingTest {
         }
     }
 
-    @Test
-    public void put() {
+    @Test//@Ignore
+    public void puttingTest() {
         Object retVal = this.cacheMap.put(this.key, this.value);
         if(this.stateOfKey == STATE_OF_KEY.NOT_EXISTENT){
             verify(this.cacheMap).entryAdded(this.key, this.value);
@@ -160,7 +158,6 @@ public class CacheMapPuttingTest {
                 verify(this.cacheMap, times(3)).writeLock();
                 verify(this.cacheMap, times(3)).writeUnlock();
             }
-            Assert.assertEquals(this.value, this.cacheMap.pinnedMap.get(this.key));
         }else {
             if(this.stateOfKey == STATE_OF_KEY.NOT_EXISTENT){
                 verify(this.cacheMap).writeLock();
@@ -169,10 +166,17 @@ public class CacheMapPuttingTest {
                 verify(this.cacheMap, times(2)).writeLock();
                 verify(this.cacheMap, times(2)).writeUnlock();
             }
-            Assert.assertEquals(this.value, this.cacheMap.cacheMap.get(this.key));
         }
+        Assert.assertEquals(this.value, this.cacheMap.get(this.key));
         if(this.stateOfKey == STATE_OF_KEY.EXISTENT){
             Assert.assertEquals(this.existingValue, retVal);
+        }else{
+            Assert.assertNull(retVal);
         }
+    }
+
+    @After
+    public void cleanUpEachTime(){
+        this.cacheMap.clear();
     }
 }
