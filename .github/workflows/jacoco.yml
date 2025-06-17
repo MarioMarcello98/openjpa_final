@@ -2,7 +2,7 @@ name: JaCoCoCoverage_ControlFlowCoverage
 on:
   push:
     branches:
-      - isw2
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 
