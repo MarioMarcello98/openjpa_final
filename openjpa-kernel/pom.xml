@@ -37,7 +37,6 @@
 
     <properties>
         <pitest.version>1.14.0</pitest.version>
-        <ba-dua.version>0.6.0</ba-dua.version>
     </properties>
 
     <dependencies>
@@ -128,7 +127,7 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                    </execution>-->
+                    </execution>
                     <execution>
                         <id>generate-standard-sco-proxies</id>
                         <phase>process-classes</phase>
@@ -144,8 +143,8 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
+            </plugin-->
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -156,7 +155,7 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <!-- do not include com/ibm UOW classes in the jar! -->
+                                <!- do not include com/ibm UOW classes in the jar! ->
                                 <exclude>com</exclude>
                                 <exclude>com/**/*</exclude>
                             </excludes>
@@ -173,7 +172,7 @@
                     </execution>
 
                 </executions>
-            </plugin>
+            </plugin-->
         </plugins>
     </build>
 
@@ -200,6 +199,7 @@
                             </targetClasses>
                             <targetTests>
                                 <param>org.apache.openjpa.util.org.apache.openjpa.util.ProxyManagerImplCopyTest</param>
+                                <param>org.apache.openjpa.util.ProxyManagerImplCreateTest</param>
                             </targetTests>
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
@@ -226,6 +226,10 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+
+            <properties>
+                <ba-dua.version>0.6.0</ba-dua.version>
+            </properties>
 
             <dependencies>
                 <dependency>
