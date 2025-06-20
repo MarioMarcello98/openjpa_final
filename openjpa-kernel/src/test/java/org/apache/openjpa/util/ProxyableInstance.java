@@ -1,10 +1,10 @@
 package org.apache.openjpa.util;
 
-public class Istance {
+public class ProxyableInstance {
     private String dummy;
 
-    public Istance() {
-        this.dummy = "Hello";
+    public ProxyableInstance() {
+        this.dummy = "Hello World";
     }
 
     public String getDummy() {
