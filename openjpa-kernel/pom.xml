@@ -231,7 +231,7 @@
             </activation>
 
             <properties>
-                <ba-dua.version>0.4.0</ba-dua.version>
+                <ba-dua.version>0.6.0</ba-dua.version>
             </properties>
 
             <dependencies>
