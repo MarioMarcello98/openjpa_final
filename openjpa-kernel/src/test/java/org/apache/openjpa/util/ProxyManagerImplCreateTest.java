@@ -6,20 +6,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.MockedStatic;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.spy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.sql.Timestamp;
+import java.util.*;
 
 @RunWith(Parameterized.class)
 public class ProxyManagerImplCreateTest {
     private ProxyManagerImpl proxyManager;
-    private final Object obj;
+    private Object obj;
     private final ObjectType objectInstance;
     private final boolean autoOff;
+    private MockedStatic<ImplHelper> mockImpl;
 
     public ProxyManagerImplCreateTest(ObjectType objectType, boolean autoOff) throws Exception {
         this.obj = generateObj(objectType);
@@ -33,14 +35,43 @@ public class ProxyManagerImplCreateTest {
                 {ObjectType.NULL, true},
                 {ObjectType.PROXYABLE, true},
                 {ObjectType.PROXYABLE, false},
-                {ObjectType.NON_PROXYABLE, false}
+                {ObjectType.NON_PROXYABLE, false},
+                // Test cases added after jacoco
+                {ObjectType.PROXY, true},
+                {ObjectType.PROXY, false},
+                {ObjectType.COLLECTION, true},
+                {ObjectType.COLLECTION, false},
+                {ObjectType.MAP, true},
+                {ObjectType.MAP, false},
+                {ObjectType.DATE, true},
+                {ObjectType.DATE, false},
+                {ObjectType.CALENDAR, true},
+                {ObjectType.CALENDAR, false},
+                {ObjectType.MANAGEABLE_TYPE, true},
+                {ObjectType.SORTED_MAP, true},
+                {ObjectType.SORTED_MAP, false},
+                {ObjectType.SORTED_SET, true},
+                {ObjectType.SORTED_SET, false},
+                {ObjectType.TIMESTAMP, true},
+                {ObjectType.TIMESTAMP, false},
+                {ObjectType.HIDE_NON_PROXYABLE, true}
         });
     }
 
     @Before
     public void setUp() {
         proxyManager = spy(new ProxyManagerImpl());
-        proxyManager.setUnproxyable(NonProxyableIstance.class.getName());   // set this type of class as not proxyable
+
+        if (objectInstance.equals(ObjectType.HIDE_NON_PROXYABLE))
+            proxyManager.setUnproxyable(NonProxyableInstanceNotFinal.class.getName());   // set this type of class as not proxyable
+
+        if (objectInstance.equals(ObjectType.PROXY))
+            obj = proxyManager.newDateProxy(Date.class);
+
+        if (objectInstance.equals(ObjectType.MANAGEABLE_TYPE)) {
+            mockImpl = mockStatic(ImplHelper.class);
+            when(ImplHelper.isManageable(any())).thenReturn(true);
+        }
     }
 
     @Test
@@ -54,30 +85,55 @@ public class ProxyManagerImplCreateTest {
     private Object generateObj(ObjectType objectType) throws Exception {
         switch (objectType) {
             case NULL:
+            case PROXY:
                 return null;
             case PROXYABLE:
                 return new ProxyableInstance();
             case NON_PROXYABLE:
-                return new NonProxyableIstance("Apple", "iPhone12");
+                return new NonProxyableInstanceFinal("Apple", "iPhone12");
+            case COLLECTION:
+                Collection<Integer> collection = new ArrayList<>();
+                return collection;
+            case MAP:
+                Map<String, Integer> map = new HashMap<>();
+                return map;
+            case DATE:
+                return new Date();
+            case CALENDAR:
+                return Calendar.getInstance();
+            case MANAGEABLE_TYPE:
+                /* Any type of data is valid, we put a simple int */
+                return 1;
+            case TIMESTAMP:
+                return new Timestamp(System.currentTimeMillis());
+            case SORTED_MAP:
+                SortedMap<Integer, Integer> sortedMap = new TreeMap<>();
+                return sortedMap;
+            case SORTED_SET:
+                SortedSet<Integer> sortedSet = new TreeSet<>();
+                return sortedSet;
+            case HIDE_NON_PROXYABLE:
+                return new NonProxyableInstanceNotFinal("Hello World");
             default:
                 throw new Exception("Invalid argument");
         }
     }
 
     private void checkNewProxy(Proxy output) {
-        switch (objectInstance) {
-            case NULL:
-            case NON_PROXYABLE:
-                Assert.assertNull(output);
-                break;
-            case PROXYABLE:
-                Assert.assertThat(output, instanceOf(Proxy.class));    // check that is effectively a Proxy instance
-                break;
-        }
+        if (!objectInstance.equals(ObjectType.NON_PROXYABLE) &&
+                !objectInstance.equals(ObjectType.NULL) &&
+                !objectInstance.equals(ObjectType.MANAGEABLE_TYPE) &&
+                !objectInstance.equals(ObjectType.HIDE_NON_PROXYABLE))
+            Assert.assertThat(output, instanceOf(Proxy.class));    // check that is effectively a Proxy instance
+        else
+            Assert.assertNull(output);
     }
 
     @After
     public void tearDown() {
         proxyManager = null;
+
+        if (mockImpl != null)
+            mockImpl.close();
     }
 }
