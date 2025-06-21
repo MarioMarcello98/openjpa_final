@@ -44,6 +44,8 @@
         <!-- SonarCloud additions -->
         <sonar.organization>mariomarcello98</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+
         <!-- JaCoCo additions -->
         <sonar.coverage.jacoco.xmlReportPaths>
             ../report-collector/target/site/jacoco-aggregate/jacoco.xml
