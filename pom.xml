@@ -42,14 +42,11 @@
         <java.testclass.version>11</java.testclass.version>
 
         <!-- SonarCloud additions -->
-        <sonar.projectKey>mariomarcello98_openjpa_final</sonar.projectKey>
         <sonar.organization>mariomarcello98</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
-
         <!-- JaCoCo additions -->
         <sonar.coverage.jacoco.xmlReportPaths>
-            ../report-collector/target/site/jacoco-aggregate/jacoco.xml
+            report-collector/target/site/jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <!-- Mockito additions -->
         <mockito.version>3.12.4</mockito.version>
