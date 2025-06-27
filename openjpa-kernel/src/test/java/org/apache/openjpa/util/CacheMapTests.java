@@ -19,39 +19,52 @@ public class CacheMapTests {
         private final boolean existingKey;
         private CacheMap cacheMap;
         private final Object output;
-        private static final Integer ValueOld = 5;
-        private Integer ValueNew = 6;
+        private Integer ValueOld = 0;
+        private Integer ValueNew = 1;
         public String keyType;
         public String valueType;
+        private boolean maxSize;
+        private boolean pinnedMap;
+
 
         private static final String NULL = "null";
         private static final String VALID = "valid";
         private static final String INVALID = "invalid";
 
-        public CacheMapPutTest(String keyType, String valueType, boolean existingKey, Object output) {
+        public CacheMapPutTest(String keyType, String valueType, boolean existingKey, boolean maxSize, boolean pinnedMap, Object output) {            this.keyType = keyType;
             this.keyType = keyType;
             this.valueType = valueType;
             this.existingKey = existingKey;
             this.output = output;
+            this.maxSize = maxSize;
+            this.pinnedMap = pinnedMap;
         }
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][] {
             //     keyType, valueType, inSoftMap, expectedOutput
-                    {NULL, NULL, false, NullPointerException.class},
-                    {VALID, VALID, true, ValueOld},
-                    {VALID, VALID, false, null},
-                    {INVALID, VALID, true, ValueOld},
-                    {INVALID, VALID, false, null},
-                    {VALID, NULL, true, null},
-                    {VALID, NULL, false, null},
-                    {INVALID, NULL, true, null},
-                    {INVALID, NULL, false, null},
-                    {VALID, INVALID, true, null},
-                    {VALID, INVALID, false, null},
-                    {INVALID, INVALID, true, null},
-                    {INVALID, INVALID, false, null},
+                    {NULL, NULL, false, false, false, null},
+                    {NULL, NULL, true, false, false, null},
+                    {NULL, VALID, false, false, false, null},
+                    {NULL, VALID, true, false, false, 0},
+                    {NULL, INVALID, false, false, false, null},
+                    {NULL, INVALID, true, false, false, null},
+
+                    {VALID, NULL, true, false, false, null},
+                    {VALID, NULL, false, false, false, null},
+                    {VALID, VALID, true, false, false, 0},
+                    {VALID, VALID, false, false, false, null},
+                    {VALID, INVALID, true, false, false, null},
+                    {VALID, INVALID, false, false, false, null},
+                    {VALID, INVALID, true, false, false, 0},
+
+                    {INVALID, NULL, true, false, false, null},
+                    {INVALID, NULL, false, false, false, null},
+                    {INVALID, VALID, true, false, false, 0},
+                    {INVALID, VALID, false, false, false, null},
+                    {INVALID, INVALID, true, false, false, null},
+                    {INVALID, INVALID, false, false, false, null},
             });
         }
 
@@ -66,6 +79,13 @@ public class CacheMapTests {
 
             if (existingKey)
                 cacheMap.put(key, value);
+
+            if(pinnedMap)
+                cacheMap.put(cacheMap.pinnedMap, key, value);
+
+            if (maxSize)
+                cacheMap.cacheMap.setMaxSize(0);
+
         }
 
         @Test
@@ -76,24 +96,21 @@ public class CacheMapTests {
                 else
                     value = new InvalidKeyValue();
 
-            try {
-                Object res = cacheMap.put(key, value);
-                Object checkGet = cacheMap.get(key);
+                // res è l'output da controllare
+            Object res = cacheMap.put(key, value);
+            Object checkGet = cacheMap.get(key);
 
-                if (output != null && Objects.equals(keyType, VALID)) {
-                    if (valueType.equals(VALID)) {
-                        Assert.assertEquals(output, res);
-                        Assert.assertEquals(ValueNew, checkGet);
-                    }
-                } else if (output != null && Objects.equals(keyType, INVALID)) {
+            if (output != null && Objects.equals(keyType, VALID)) {
+                if (valueType.equals(VALID)) {
                     Assert.assertEquals(output, res);
                     Assert.assertEquals(ValueNew, checkGet);
-                } else {
-                    Assert.assertNull(res);
                 }
-            } catch (Exception e) {
-                assert output != null;
-                Assert.assertEquals(output.getClass(), e.getClass());
+            } else if (output != null && Objects.equals(keyType, INVALID)) {
+                Assert.assertEquals(output, res);
+                Assert.assertEquals(ValueNew, checkGet);
+            } else {
+
+                Assert.assertNull(res);
             }
         }
 
@@ -119,6 +136,9 @@ public class CacheMapTests {
             }
         }
     }
+
+
+
     @RunWith(Parameterized.class)
     public static class CacheMapGetTest {
         private Object key;
@@ -151,6 +171,11 @@ public class CacheMapTests {
                     {VALID, true, false, 5},
                     {INVALID, true, false, null},
                     {INVALID, false, false, null},
+                    {NULL, false, true, 5},
+                    {VALID, true, true, 5},
+                    {VALID, false, false, null},
+                    {INVALID, true, true, null},
+                    {INVALID, false, false, null}
 
             });
         }

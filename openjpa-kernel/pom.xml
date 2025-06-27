@@ -205,7 +205,7 @@
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
                             </avoidCallsTo>
-                            <excludedMethods>
+                            <!--excludedMethods>
                                 <excludedMethod>readLock</excludedMethod>
                                 <excludedMethod>readUnlock</excludedMethod>
                                 <excludedMethod>writeLock</excludedMethod>
@@ -223,7 +223,7 @@
                                 <excludedMethod>softMapValueExpired</excludedMethod>
                                 <excludedMethod>notifyEntryRemovals</excludedMethod>
                                 <excludedMethod>toString</excludedMethod>
-                                <!-- Metodi ProxyManagerImpl -->
+                                <!- Metodi ProxyManagerImpl ->
                                 <excludedMethod>getTrackChanges</excludedMethod>
                                 <excludedMethod>setTrackChanges</excludedMethod>
                                 <excludedMethod>getAssertAllowedType</excludedMethod>
@@ -246,7 +246,7 @@
                                 <excludedMethod>findComparatorConstructor</excludedMethod>
                                 <excludedMethod>findGetter</excludedMethod>
                                 <excludedMethod>startsWith</excludedMethod>
-                            </excludedMethods>
+                            </excludedMethods-->
 
                             <historyInputFile>${pitest.history.file}</historyInputFile>
                             <historyOutputFile>${pitest.history.file}</historyOutputFile>
