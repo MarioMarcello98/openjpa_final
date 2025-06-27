@@ -1,4 +1,4 @@
-name: JaCoCoCoverage_ControlFlowCoverage
+name: JaCoCo
 on:
   push:
     branches:
@@ -41,8 +41,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn clean verify -P JaCoCo
-
+        run: | 
+          mvn clean verify -P JaCoCo
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=MarioMarcello98_openjpa_final \
+            -Dsonar.organization=mariomarcello98 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN}}
       - name: Save JaCoCo report
         uses: actions/upload-artifact@v4
         with:
