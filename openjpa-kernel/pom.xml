@@ -199,10 +199,8 @@
                                 <param>org.apache.openjpa.util.CacheMap</param>
                             </targetClasses>
                             <targetTests>
-                                <param>org.apache.openjpa.util.org.apache.openjpa.util.ProxyManagerImplCopyTest</param>
-                                <param>org.apache.openjpa.util.ProxyManagerImplCreateTest</param>
-                                <param>org.apache.openjpa.util.CacheMapGetTest</param>
-                                <param>org.apache.openjpa.util.CacheMapPutTest</param>
+                                <param>org.apache.openjpa.util.ProxyManagerImplTests</param>
+                                <param>org.apache.openjpa.util.CacheMapTests</param>
                             </targetTests>
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
