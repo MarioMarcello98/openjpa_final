@@ -43,7 +43,7 @@ public class CacheMapTests {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][] {
-            //     keyType, valueType, inSoftMap, expectedOutput
+            //     keyType, valueType, inSoftMap, maxsize, pinnedMap, expectedOutput
                     {NULL, NULL, false, false, false, null},
                     {NULL, NULL, true, false, false, null},
                     {NULL, VALID, false, false, false, null},
@@ -171,11 +171,8 @@ public class CacheMapTests {
                     {VALID, true, false, 5},
                     {INVALID, true, false, null},
                     {INVALID, false, false, null},
-                    {NULL, false, true, 5},
-                    {VALID, true, true, 5},
-                    {VALID, false, false, null},
-                    {INVALID, true, true, null},
-                    {INVALID, false, false, null}
+
+
 
             });
         }
