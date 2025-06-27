@@ -205,6 +205,49 @@
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
                             </avoidCallsTo>
+                            <excludedMethods>
+                                <excludedMethod>readLock</excludedMethod>
+                                <excludedMethod>readUnlock</excludedMethod>
+                                <excludedMethod>writeLock</excludedMethod>
+                                <excludedMethod>writeUnlock</excludedMethod>
+                                <excludedMethod>setCacheSize</excludedMethod>
+                                <excludedMethod>getCacheSize</excludedMethod>
+                                <excludedMethod>setSoftReferenceSize</excludedMethod>
+                                <excludedMethod>getSoftReferenceSize</excludedMethod>
+                                <excludedMethod>isLRU</excludedMethod>
+                                <excludedMethod>getPinnedKeys</excludedMethod>
+                                <excludedMethod>entryRemoved</excludedMethod>
+                                <excludedMethod>entryAdded</excludedMethod>
+                                <excludedMethod>cacheMapOverflowRemoved</excludedMethod>
+                                <excludedMethod>softMapOverflowRemoved</excludedMethod>
+                                <excludedMethod>softMapValueExpired</excludedMethod>
+                                <excludedMethod>notifyEntryRemovals</excludedMethod>
+                                <excludedMethod>toString</excludedMethod>
+                                <!-- Metodi ProxyManagerImpl -->
+                                <excludedMethod>getTrackChanges</excludedMethod>
+                                <excludedMethod>setTrackChanges</excludedMethod>
+                                <excludedMethod>getAssertAllowedType</excludedMethod>
+                                <excludedMethod>setAssertAllowedType</excludedMethod>
+                                <excludedMethod>getDelayCollectionLoading</excludedMethod>
+                                <excludedMethod>setDelayCollectionLoading</excludedMethod>
+                                <excludedMethod>getUnproxyable</excludedMethod>
+                                <excludedMethod>setUnproxyable</excludedMethod>
+                                <excludedMethod>toProxyableCollectionType</excludedMethod>
+                                <excludedMethod>toProxyableMapType</excludedMethod>
+                                <excludedMethod>isUnproxyable</excludedMethod>
+                                <excludedMethod>loadBuildTimeProxy</excludedMethod>
+                                <excludedMethod>loadDelayedProxy</excludedMethod>
+                                <excludedMethod>instantiateProxy</excludedMethod>
+                                <excludedMethod>getProxyClassName</excludedMethod>
+                                <excludedMethod>assertNotFinal</excludedMethod>
+                                <excludedMethod>isProxyable</excludedMethod>
+                                <excludedMethod>nextProxyId</excludedMethod>
+                                <excludedMethod>findCopyConstructor</excludedMethod>
+                                <excludedMethod>findComparatorConstructor</excludedMethod>
+                                <excludedMethod>findGetter</excludedMethod>
+                                <excludedMethod>startsWith</excludedMethod>
+                            </excludedMethods>
+
                             <historyInputFile>${pitest.history.file}</historyInputFile>
                             <historyOutputFile>${pitest.history.file}</historyOutputFile>
                         </configuration>
