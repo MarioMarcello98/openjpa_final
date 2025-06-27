@@ -65,6 +65,13 @@ public class CacheMapTests {
                     {INVALID, VALID, false, false, false, null},
                     {INVALID, INVALID, true, false, false, null},
                     {INVALID, INVALID, false, false, false, null},
+
+                    {VALID, NULL, false, false, true, null},
+                    {VALID, VALID, false, false, true, 0},
+                    {VALID, VALID, true, true, false, null},
+                    {VALID, INVALID, false, false, true, null},
+                    {VALID, INVALID, true, true, false, null},
+
             });
         }
 
@@ -171,6 +178,12 @@ public class CacheMapTests {
                     {VALID, true, false, 5},
                     {INVALID, true, false, null},
                     {INVALID, false, false, null},
+
+                    {NULL, false, true, 5},
+                    {VALID, true, true, 5},
+                    {VALID, false, false, null},
+                    {INVALID, true, true, null},
+                    {INVALID, false, false, null}
 
 
 
