@@ -53,8 +53,8 @@ public class ProxyManagerImplTests {
                 case PROXYABLE:
                     Assert.assertNotNull(output);
                     Assert.assertEquals(
-                            ((ProxyableInstance) obj).getDummy(),
-                            ((ProxyableInstance) output).getDummy()
+                            ((ProxyableInstance) obj).getState(),
+                            ((ProxyableInstance) output).getState()
                     );
                     break;
             }
@@ -72,7 +72,7 @@ public class ProxyManagerImplTests {
                 case PROXYABLE:
                     return new ProxyableInstance();
                 case NON_PROXYABLE:
-                    return new NonProxyableIstance("Fiat", "Punto");
+                    return new NonProxyableIstance("0001", "NonProxyable");
                 default:
                     throw new Exception("Invalid object type");
             }
@@ -135,7 +135,7 @@ public class ProxyManagerImplTests {
                 case PROXYABLE:
                     return new ProxyableInstance();
                 case NON_PROXYABLE:
-                    return new NonProxyableIstance("Fiat", "Punto");
+                    return new NonProxyableIstance("0001", "NonProxyable");
                 default:
                     throw new Exception("Invalid object type");
             }

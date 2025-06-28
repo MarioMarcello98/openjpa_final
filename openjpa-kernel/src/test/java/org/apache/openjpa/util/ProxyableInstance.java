@@ -1,17 +1,17 @@
 package org.apache.openjpa.util;
 
 public class ProxyableInstance {
-    private String dummy;
+    private String state;
 
     public ProxyableInstance() {
-        this.dummy = "Hello World";
+        this.state = "Proxyable";
     }
 
-    public String getDummy() {
-        return dummy;
+    public String getState() {
+        return state;
     }
 
-    public void setDummy(String dummy) {
-        this.dummy = dummy;
+    public void setState(String state) {
+        this.state = state;
     }
 }
