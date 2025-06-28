@@ -47,13 +47,13 @@ public class CacheMapTests {
                     {NULL, NULL, false, false, false, null},
                     {NULL, NULL, true, false, false, null},
                     {NULL, VALID, false, false, false, null},
-                    {NULL, VALID, true, false, false, null},
+                    {NULL, VALID, true, false, false, 0},
                     {NULL, INVALID, false, false, false, null},
                     {NULL, INVALID, true, false, false, null},
 
                     {VALID, NULL, true, false, false, null},
                     {VALID, NULL, false, false, false, null},
-                    {VALID, VALID, true, false, false, null},
+                    {VALID, VALID, true, false, false, 0},
                     {VALID, VALID, false, false, false, null},
                     {VALID, INVALID, true, false, false, null},
                     {VALID, INVALID, false, false, false, null},
@@ -61,7 +61,7 @@ public class CacheMapTests {
 
                     {INVALID, NULL, true, false, false, null},
                     {INVALID, NULL, false, false, false, null},
-                    {INVALID, VALID, true, false, false, null},
+                    {INVALID, VALID, true, false, false, 0},
                     {INVALID, VALID, false, false, false, null},
                     {INVALID, INVALID, true, false, false, null},
                     {INVALID, INVALID, false, false, false, null},
@@ -72,7 +72,7 @@ public class CacheMapTests {
                     {VALID, INVALID, false, false, true, null},
                     {VALID, INVALID, true, true, false, null},
 
-                    {VALID, VALID, true, false, true, 5},
+                    {VALID, VALID, true, false, true, 0},
                     {INVALID, VALID, true, true, false, null},
                     {INVALID, INVALID, true, true, true, null},
 
