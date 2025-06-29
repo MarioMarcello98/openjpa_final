@@ -215,14 +215,20 @@ public class ProxyManagerImplTests {
                     return new NonProxyableIstance("0001", "NonProxyable");
                 case MAP:
                     Map<String, Integer> map = new HashMap<>();
+                    map.put("A", 0);
+                    map.put("B", 1);
                     return map;
                 case COLLECTION:
                     Collection<Integer> collection = new ArrayList<>();
                     return collection;
                 case DATE:
-                    return new Date();
+                    Date date = new Date();
+                    date.setTime(date.getTime());
+                    return date;
                 case CALENDAR:
-                    return Calendar.getInstance();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(500);
+                    return calendar;
                 case MANAGEABLE_TYPE:
                     return 1;
                 case SORTED_MAP:
@@ -232,7 +238,9 @@ public class ProxyManagerImplTests {
                     SortedSet<Integer> sortedSet = new TreeSet<>();
                     return sortedSet;
                 case TIMESTAMP:
-                    return new Timestamp(System.currentTimeMillis());
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    timestamp.setNanos(500);
+                    return timestamp;
                 default:
                     throw new Exception("Invalid argument");
             }
@@ -245,7 +253,26 @@ public class ProxyManagerImplTests {
                 Assert.assertThat(output, instanceOf(Proxy.class));
             else
                 Assert.assertNull(output);
+
+            if (objectInstance.equals(ObjectType.MAP)) {
+                Assert.assertFalse(((Map<?, ?>) output).isEmpty());
+            }
+
+            if (objectInstance.equals(ObjectType.DATE)) {
+                Assert.assertEquals(((Date) output).getTime(), ((Date) obj).getTime());
+            }
+
+            if (objectInstance.equals(ObjectType.CALENDAR)) {
+                Assert.assertEquals(((Calendar) output).getTimeInMillis(), ((Calendar) obj).getTimeInMillis());
+            }
+
+            if (objectInstance.equals(ObjectType.TIMESTAMP)) {
+                Assert.assertEquals(((Timestamp) output).getNanos(), ((Timestamp) obj).getNanos());
+            }
         }
+
+
+
 
         @After
         public void tearDown() {
