@@ -59,7 +59,7 @@ public class CacheMapTests {
 
                     {INVALID, NULL, true, false, false, null},
                     {INVALID, NULL, false, false, false, null},
-                    {INVALID, VALID, true, false, false, 0},
+                    {INVALID, VALID, true, false, false, null},
                     {INVALID, VALID, false, false, false, null},
                     {INVALID, INVALID, true, false, false, null},
                     {INVALID, INVALID, false, false, false, null},
