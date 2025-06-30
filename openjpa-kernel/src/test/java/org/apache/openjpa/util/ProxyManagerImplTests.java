@@ -51,7 +51,7 @@ public class ProxyManagerImplTests {
 
         @Before
         public void setUp() {
-            proxyManager = spy(new ProxyManagerImpl());
+            proxyManager = new ProxyManagerImpl();
 
             if (objectInstance.equals(ObjectType.NON_PROXYABLE))
                 proxyManager.setUnproxyable(NonProxyableIstance.class.getName());
@@ -187,7 +187,7 @@ public class ProxyManagerImplTests {
 
         @Before
         public void setUp() {
-            proxyManager = spy(new ProxyManagerImpl());
+            proxyManager = new ProxyManagerImpl();
 
             if (objectInstance.equals(ObjectType.PROXY))
                 obj = proxyManager.newDateProxy(Date.class);
@@ -255,7 +255,7 @@ public class ProxyManagerImplTests {
                 Assert.assertNull(output);
 
             if (objectInstance.equals(ObjectType.MAP)) {
-                Assert.assertFalse(((Map<?, ?>) output).isEmpty());
+                Assert.assertEquals(((Map<?, ?>) output).get("A"), ((Map<?, ?>) obj).get("A"));
             }
 
             if (objectInstance.equals(ObjectType.DATE)) {
@@ -270,8 +270,6 @@ public class ProxyManagerImplTests {
                 Assert.assertEquals(((Timestamp) output).getNanos(), ((Timestamp) obj).getNanos());
             }
         }
-
-
 
 
         @After

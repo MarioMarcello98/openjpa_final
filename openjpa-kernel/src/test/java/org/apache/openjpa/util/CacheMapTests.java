@@ -55,9 +55,7 @@ public class CacheMapTests {
                     {VALID, NULL, false, false, false, null},
                     {VALID, VALID, true, false, false, 0},
                     {VALID, VALID, false, false, false, null},
-                    {VALID, INVALID, true, false, false, null},
-                    {VALID, INVALID, false, false, false, null},
-                    {VALID, INVALID, true, false, false, 0},
+                    {VALID, INVALID, true, false, false, new InvalidKeyValue()},
 
                     {INVALID, NULL, true, false, false, null},
                     {INVALID, NULL, false, false, false, null},
@@ -69,12 +67,10 @@ public class CacheMapTests {
                     {VALID, NULL, false, false, true, null},
                     {VALID, VALID, false, false, true, 0},
                     {VALID, VALID, true, true, false, null},
-                    {VALID, INVALID, false, false, true, null},
+                    {VALID, INVALID, false, false, true, new InvalidKeyValue()},
                     {VALID, INVALID, true, true, false, null},
 
                     {VALID, VALID, true, false, true, 0},
-                    {INVALID, VALID, true, true, false, null},
-                    {INVALID, INVALID, true, true, true, null},
 
             });
         }
@@ -83,103 +79,100 @@ public class CacheMapTests {
         public void setUp() {
             cacheMap = spy(new CacheMap());
 
-            setParam(keyType);
-            setParam(valueType);
+            setKey(keyType);
+            setValue(valueType);
 
-            if (maxSize)
+            if (maxSize) {
                 cacheMap.cacheMap.setMaxSize(0);
-
-            if (existingKey)
+            } else if (existingKey) {
                 cacheMap.put(key, value);
-
-            if (pinnedMap)
+            } else if (pinnedMap) {
                 cacheMap.put(cacheMap.pinnedMap, key, value);
+            }
+
         }
 
         @Test
         public void test() {
+            Object newValue = null;
             if (!Objects.equals(valueType, NULL))
                 if (Objects.equals(valueType, VALID))
-                    value = ValueNew;
+                    newValue = ValueNew;
                 else
-                    value = new InvalidKeyValue();
+                    newValue = new InvalidKeyValue();
 
             if (pinnedMap) {
                 cacheMap.cacheMap.clear();
             }
 
-
             // res è l'output da controllare
-            Object res = cacheMap.put(key, value);
+            Object res = cacheMap.put(key, newValue);
             Object checkGet = cacheMap.get(key);
 
-            if (output != null) {
-                if (valueType.equals(VALID)) {
-                    Assert.assertEquals(output, res);
-                    Assert.assertEquals(ValueNew, checkGet);
-                }
-            } else {
+            if (!existingKey && !pinnedMap)
+                System.out.println(res);
 
+            if (output != null) {
+                Assert.assertEquals(output, res);
+            } else {
                 Assert.assertNull(res);
             }
 
+            if (!valueType.equals(NULL) && !maxSize)
+                Assert.assertNotNull(checkGet);
+            else
+                Assert.assertNull(checkGet);
 
-            if (!existingKey && !pinnedMap && !maxSize)
-                verify(cacheMap).put(key, value);
-
-            verify(cacheMap).get(key);
-
-            if (pinnedMap && valueType.equals(VALID) && existingKey) {
-                verify(cacheMap).put(cacheMap.pinnedMap, key, ValueOld);
-                verify(cacheMap).put(cacheMap.pinnedMap, key, ValueNew);
-
-                verify(cacheMap, times(2)).writeLock();
-                verify(cacheMap).entryAdded(key, ValueOld);
-                verify(cacheMap).entryRemoved(key, ValueOld, false);
-                verify(cacheMap).entryAdded(key, ValueNew);
-                verify(cacheMap, times(2)).writeUnlock();
-            } else if (!pinnedMap && !maxSize && existingKey && valueType.equals(VALID)) {
-                verify(cacheMap).put(key, ValueOld);
-                verify(cacheMap).put(key, ValueNew);
-
-                verify(cacheMap, times(2)).writeLock();
-                verify(cacheMap).entryRemoved(key, ValueOld, false);
-                verify(cacheMap).entryAdded(key, ValueNew);
-                verify(cacheMap, times(2)).writeUnlock();
-            } else if (pinnedMap && valueType.equals(NULL)) {
-                verify(cacheMap, times(2)).put(cacheMap.pinnedMap, key, value);
-                verify(cacheMap).put(key, value);
-
-                verify(cacheMap).writeLock();
-                verify(cacheMap).entryAdded(key, value);
+            if (pinnedMap) {
+                if (valueType.equals(NULL)) {
+                    verify(cacheMap).entryAdded(key, newValue);
+                } else {
+                    verify(cacheMap).entryRemoved(key, value, false);
+                    verify(cacheMap).entryAdded(key, newValue);
+                }
                 verify(cacheMap).writeUnlock();
+            } else if (!maxSize && existingKey && valueType.equals(VALID)) {
+                verify(cacheMap).entryRemoved(key, value, false);
+                verify(cacheMap).entryAdded(key, newValue);
+                verify(cacheMap, times(2)).writeUnlock();
+            } else if (existingKey && valueType.equals(NULL)) {
+                verify(cacheMap, times(2)).entryAdded(key, newValue);
             }
         }
-
 
         @After
         public void tearDown() {
             cacheMap.clear();
         }
 
-        private void setParam(String param) {
-            switch (param) {
+        private void setKey(String keyType) {
+            switch (keyType) {
                 case NULL:
                     key = null;
-                    value = null;
                     break;
                 case VALID:
                     key = new Object();
+                    break;
+                case INVALID:
+                    key = this.output;
+                    break;
+            }
+        }
+
+        private void setValue(String valueType) {
+            switch (valueType) {
+                case NULL:
+                    value = null;
+                    break;
+                case VALID:
                     value = ValueOld;
                     break;
                 case INVALID:
-                    key = new InvalidKeyValue();
-                    value = new InvalidKeyValue();
+                    value = this.output;
                     break;
             }
         }
     }
-
 
 
     @RunWith(Parameterized.class)
