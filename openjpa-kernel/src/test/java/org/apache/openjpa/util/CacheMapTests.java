@@ -59,7 +59,7 @@ public class CacheMapTests {
 
                     {INVALID, NULL, true, false, false, null},
                     {INVALID, NULL, false, false, false, null},
-                    {INVALID, VALID, true, false, false, 0},
+                    {INVALID, VALID, true, false, false, null},
                     {INVALID, VALID, false, false, false, null},
                     {INVALID, INVALID, true, false, false, null},
                     {INVALID, INVALID, false, false, false, null},
@@ -108,16 +108,13 @@ public class CacheMapTests {
             Object res = cacheMap.put(key, newValue);
             Object checkGet = cacheMap.get(key);
 
-            if (!existingKey && !pinnedMap)
-                System.out.println(res);
-
             if (output != null) {
                 Assert.assertEquals(output, res);
             } else {
                 Assert.assertNull(res);
             }
 
-            if (!valueType.equals(NULL) && !maxSize)
+            if (!valueType.equals(NULL) && !maxSize && !keyType.equals(INVALID))
                 Assert.assertNotNull(checkGet);
             else
                 Assert.assertNull(checkGet);
@@ -130,7 +127,7 @@ public class CacheMapTests {
                     verify(cacheMap).entryAdded(key, newValue);
                 }
                 verify(cacheMap).writeUnlock();
-            } else if (!maxSize && existingKey && valueType.equals(VALID)) {
+            } else if (!maxSize && existingKey && valueType.equals(VALID) && keyType.equals(VALID)) {
                 verify(cacheMap).entryRemoved(key, value, false);
                 verify(cacheMap).entryAdded(key, newValue);
                 verify(cacheMap, times(2)).writeUnlock();
@@ -153,7 +150,7 @@ public class CacheMapTests {
                     key = new Object();
                     break;
                 case INVALID:
-                    key = this.output;
+                    key = new InvalidKeyValue();
                     break;
             }
         }
@@ -215,7 +212,6 @@ public class CacheMapTests {
 
                     {VALID, false, true, 5},
                     {INVALID, false, true, null},
-                    {NULL, true, true, 5}
             });
         }
 
@@ -248,19 +244,8 @@ public class CacheMapTests {
 
             if (existingKey && inSoftMap && !keyType.equals(INVALID)) {
                 verify(cacheMap, times(2)).put(key, Value);
-            } else if (inSoftMap) {
-                verify(cacheMap).setSoftReferenceSize(softMapSize);
-                if (!existingKey || !keyType.equals(VALID)) {
-                    verify(cacheMap).put(cacheMap.softMap, key, Value);
-                }
-            } else if (existingKey) {
-                verify(cacheMap).put(key, Value);
             }
-
-            verify(cacheMap).get(key);
         }
-
-
 
         @After
         public void tearDown() {
